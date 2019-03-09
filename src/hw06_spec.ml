@@ -111,9 +111,11 @@ let t4 = mk_tree 3 (mk_elem 1) (mk_elem 4)
 let t5 = mk_tree 7 (mk_tree 3 (mk_elem 1) (mk_tree 5 (mk_elem 4) (mk_elem 6))) (mk_tree 9 (mk_elem 8) (mk_elem 10))
 let t6 = mk_tree 7 (mk_tree 3 (mk_elem 1) (mk_tree 5 (mk_elem 4) (mk_elem 8))) (mk_tree 9 (mk_elem 8) (mk_elem 10))
 let t7 = mk_tree 7 (mk_tree 3 (mk_elem 1) (mk_tree 5 (mk_elem 4) (mk_elem 6))) (mk_tree 9 (mk_elem 6) (mk_elem 10))
+let t8 = mk_tree 1 (mk_elem 1) (mk_elem 4)
+let t9 = mk_tree 4 (mk_elem 1) (mk_elem 4)
     
 let is_sorted_tests =
-  [(t1, true); (t2, true); (t3, false); (t4, true); (t5, true); (t6, false)]
+  [(t1, true); (t2, true); (t3, false); (t4, true); (t5, true); (t6, false); (t7, false); (t8, false); (t9, false)]
 
 let is_sorted_suite =
   List.map
