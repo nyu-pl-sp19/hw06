@@ -8,8 +8,8 @@ let rec pr_nlist_list pe ppf = function
       Format.fprintf ppf "%a;@ %a" (pr_nlist pe) xs (pr_nlist_list pe) xss 
   
 and pr_nlist pe ppf = function
-  | Atom x -> Format.fprintf ppf "NLOne@ @[%a@]" pe x
-  | NList xss -> Format.fprintf ppf "NLList@[<2>@ [@[%a@]]@]" (pr_nlist_list pe) xss
+  | Atom x -> Format.fprintf ppf "Atom@ @[%a@]" pe x
+  | NList xss -> Format.fprintf ppf "NList@[<2>@ [@[%a@]]@]" (pr_nlist_list pe) xss
 
 let string_of_int_nlist xss =
   pr_nlist (fun ppf -> Format.fprintf ppf "%d") Format.str_formatter xss;
@@ -100,6 +100,24 @@ let in_relation_suite =
     
 (** Problem 2 tests *)
 
+let flatten_tests =
+  [Atom 1, [1];
+   NList [Atom 1; Atom 2], [1; 2];
+   NList [Atom 1; NList []; Atom 2], [1; 2];
+   NList [Atom 1; NList [Atom 3; Atom 4]; Atom 5], [1; 3; 4; 5];
+   NList [Atom 1; NList [Atom 2; Atom 3;
+       NList [Atom 4; Atom 5]; NList [Atom 6; Atom 7; NList [Atom 8];
+         Atom 9]; Atom 10]],
+   [1; 2; 3; 4; 5; 6; 7; 8; 9; 10]]
+
+let flatten_suite =
+  List.map
+    (fun (nl, res) ->
+      let name = "flatten " ^ string_of_int_nlist nl in
+      name >:: fun tc -> assert_equal ~printer:ilist_to_string res (flatten nl))
+    flatten_tests
+
+    
 let emp = Leaf
 let mk_elem x = Node (x, emp, emp)
 let mk_tree x l r = Node (x, l, r)
@@ -140,6 +158,6 @@ let list_of_tree_suite =
 (** Complete test suite *)
 
 let suite =   
-  "Tests" >::: unzip_suite @ fold_right_suite @ in_relation_suite @ is_sorted_suite @ list_of_tree_suite
+  "Tests" >::: unzip_suite @ fold_right_suite @ in_relation_suite @ flatten_suite @ is_sorted_suite @ list_of_tree_suite
     
 let () = run_test_tt_main suite
